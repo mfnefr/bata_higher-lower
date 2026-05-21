@@ -5,8 +5,6 @@ namespace App\Livewire;
 use App\Models\Product;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
 
 #[Layout('layouts.app')]
 class Game extends Component{
@@ -15,9 +13,10 @@ class Game extends Component{
     public array $productB = [];
     public string $result = '';
     public bool $answered = false;
+    public int $priceA = 0;
+    public int $priceB = 0;
     private string $guess;
     private string $answer;
-    private string $sessionKey;
 
     public function mount(): void{
         $this->loadProducts();
@@ -25,11 +24,6 @@ class Game extends Component{
 
     private function loadProducts(): void{
         $products = Product::getTwoRandomProducts();
-
-        $key = Str::random(32);
-        Session::put('session_key', $key);
-        Session::put('product_a_id', $products[0]->id);
-        Session::put('product_b_id', $products[1]->id);
 
         $this->productA = [
             'id' => $products[0]->id,
@@ -45,21 +39,17 @@ class Game extends Component{
     }
 
     public function guess(string $guess): void{
-        $sessionIdA = Session::get('product_a_id');
-        $sessionIdB = Session::get('product_b_id');
-
-        if($this->productA['id'] !== $sessionIdA || $this->productB['id'] !== $sessionIdB){
-            $this->loadProducts();
+        if($this->answered){
             return;
         }
 
-        $priceA = Product::getPriceById($sessionIdA);
-        $priceB = Product::getPriceById($sessionIdB);
+        $this->priceA = Product::getPriceById($this->productA['id']);
+        $this->priceB = Product::getPriceById($this->productB['id']);
 
         $this->guess = $guess;
-        $this->answer = $priceA > $priceB ? 'higher' : 'lower';
+        $this->answer = $this->priceA > $this->priceB ? $this->productA['id'] : $this->productB['id'];
 
-        if($priceA === $priceB || $this->guess === $this->answer){
+        if($this->priceA === $this->priceB || $this->guess === $this->answer){
             $this->score++;
             $this->result = 'correct';
         }else{
@@ -68,8 +58,6 @@ class Game extends Component{
         }
 
         $this->answered = true;
-
-        Session::forget('session_key');
     }
 
     public function nextRound(): void{
@@ -77,6 +65,8 @@ class Game extends Component{
         $this->guess = '';
         $this->answer = '';
         $this->answered = false;
+        $this->priceA = 0;
+        $this->priceB = 0;
         $this->loadProducts();
     }
 

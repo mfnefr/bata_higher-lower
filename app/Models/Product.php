@@ -17,6 +17,7 @@ class Product extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'price' => 'float',
     ];
 
     public function scopeActive(Builder $query): Builder
@@ -25,12 +26,19 @@ class Product extends Model
     }
 
     public static function getTwoRandomProducts(): array{
+        if(static::active()->count() < 2){
+            throw new \Exception("Not enough active products available.");
+        }
+
+        $minId = static::active()->min('id');
         $maxId = static::active()->max('id');
 
         $products = collect();
+        $attempts = 0;
 
-        while($products->count() < 2){
-            $randomId = rand(1, $maxId);
+        while($products->count() < 2 && $attempts < 10){
+            $attempts++;
+            $randomId = rand($minId, $maxId);
 
             $product = static::active()->where('id', '>=', $randomId)->first(['id', 'name', 'image_url']);
 
@@ -43,6 +51,6 @@ class Product extends Model
     }
 
     public static function getPriceById(int $id): float{
-        return static::active()->where('id', $id)->value('price');
+        return (float) static::active()->where('id', $id)->value('price');
     }
 }

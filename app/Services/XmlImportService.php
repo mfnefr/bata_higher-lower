@@ -8,13 +8,12 @@ use XMLReader;
 
 class XmlImportService{
     private string $feedUrl = 'https://bata-feed.s3.eu-central-1.amazonaws.com/feeds/google/google_eu_nl.xml';
-
     private string $namespace = 'http://base.google.com/ns/1.0';
 
     public function import(): array{
-        $stats = ['inserted' => 0, 'updated' => 0, 'skipped' => 0];
-
+        $stats = ['processed' => 0, 'skipped' => 0];
         $processedMpn = [];
+        $batch = [];
 
         $reader = new XMLReader();
 
@@ -25,18 +24,35 @@ class XmlImportService{
         while($reader->read()){
             if($reader->nodeType === XMLReader::ELEMENT && $reader->localName === 'item'){
                 $xml = simplexml_load_string($reader->readOuterXML());
-                $result = $this->processItem($xml, $processedMpn);
-                $stats[$result]++;
+                $itemData = $this->processItem($xml, $processedMpn);
+
+                if($itemData === null){
+                    $stats['skipped']++;
+                    continue;
+                }
+
+                $batch[] = $itemData;
+                $stats['processed']++;
+
+                if(count($batch) >= 100){
+                    $this->insertBatch($batch);
+                    $batch = [];
+                }
             }
         }
 
         $reader->close();
+
+        if(!empty($batch)){
+            $this->insertBatch($batch);
+        }
+
         $this->deactivateMissingProducts();
 
         return $stats;
     }
 
-    private function processItem(\SimpleXMLElement $item, array &$processedMpn): string{
+    private function processItem(\SimpleXMLElement $item, array &$processedMpn): ?array{
         $g = $item->children($this->namespace);
 
         $externalId = (string) $g->id;
@@ -48,32 +64,29 @@ class XmlImportService{
 
         $price = $this->parsePrice($priceRaw);
 
-        if(empty($imageUrl) || $price <= 0 || $availability !== 'in stock' || in_array($mpn, $processedMpn)){
-            return 'skipped';
+        if(empty($imageUrl) || $price <= 0 || $availability !== 'in stock' || isset($processedMpn[$mpn])){
+            return null;
         }
 
-        $processedMpn[] = $mpn;
-        $product = Product::where('external_id', $externalId)->first();
+        $processedMpn[$mpn] = true;
+        
+        return [
+            'external_id' => $externalId,
+            'name' => $name,
+            'price' => $price,
+            'image_url' => $imageUrl,
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
 
-        if ($product) {
-            $product->name      = $name;
-            $product->price     = number_format($price, 2, '.', '');
-            $product->image_url = $imageUrl;
-            $product->is_active = true;
-            $product->save();
-
-            return 'updated';
-        } else {
-            $product = new Product();
-            $product->external_id = $externalId;
-            $product->name        = $name;
-            $product->price       = number_format($price, 2, '.', '');
-            $product->image_url   = $imageUrl;
-            $product->is_active   = true;
-            $product->save();
-
-            return 'inserted';
-        }
+    private function insertBatch(array $batch): void{
+        Product::upsert(
+            $batch,
+            ['external_id'],
+            ['name', 'price', 'image_url', 'is_active', 'updated_at']
+        );
     }
 
     private function parsePrice(string $priceRaw): float{

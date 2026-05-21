@@ -4,14 +4,13 @@ namespace App\Console\Commands;
 
 use App\Services\XmlImportService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SyncXmlFeed extends Command
 {
     protected $signature = 'sync:xml';
     protected $description = 'Download products from XML feed';
-    /**
-     * Execute the console command.
-     */
+
     public function handle(XmlImportService $importService): int
     {
         $this->info("Starting XML feed synchronization...");
@@ -19,15 +18,21 @@ class SyncXmlFeed extends Command
         try{
             $stats = $importService->import();
 
-            $this->table(['Vloženo', 'Aktualizováno', 'Přeskočeno'], 
-            [[$stats['inserted'], $stats['updated'], $stats['skipped']]]);
+            $this->table(['Vloženo', 'Přeskočeno'],
+            [[$stats['processed'], $stats['skipped']]]);
 
             $this->info("XML feed synchronization completed successfully.");
 
             return Command::SUCCESS;
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->error("Error occurred while synchronizing XML feed: " . $e->getMessage());
+
+            Log::error('XML sync failed: ', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
 
             return Command::FAILURE;
         }

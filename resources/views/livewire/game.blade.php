@@ -1,14 +1,3 @@
-<?php
-
-use Livewire\Component;
-use App\Models\Product;
-
-new class extends Component
-{
-    //
-};
-?>
-
 <div class="min-h-screen flex flex-col items-center justify-center p-4 w-full">
     <div class="text-center mb-8">
         <p class="text-4xl font-bold">Score: {{ $score }}</p>
@@ -18,7 +7,8 @@ new class extends Component
 
     <div class="flex flex-col md:flex-row gap-6 w-full max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto justify-center items-stretch">
 
-    <button wire:click="guess('higher')" @disabled($answered) class="flex-1">
+    <button wire:click="guess({{ $productA['id'] }})" @disabled($answered) class="flex-1 rounded-2xl overflow-hidden transition-all duration-200
+           {{ !$answered ? 'hover:scale-105 cursor-pointer' : 'cursor-default opacity-75' }}">
         <img
             src="{{ $productA['image_url'] }}"
             alt="{{ $productA['name'] }}"
@@ -30,7 +20,7 @@ new class extends Component
             </p>
             <p class="text-gray mt-1 text-sm md:text-base lg:text-lg xl:text-xl min-h-[28px]">
                 @if($answered)
-                    {{ number_format(Product::getPriceById($productA['id']), 2) }} EUR
+                    {{ number_format($priceA, 2) }} EUR
                 @endif
             </p>
         </div>
@@ -48,7 +38,8 @@ new class extends Component
         @endif
     </div>
 
-    <button wire:click="guess('lower')" @disabled($answered) class="flex-1">
+    <button wire:click="guess({{ $productB['id'] }})" @disabled($answered) class="flex-1 rounded-2xl overflow-hidden transition-all duration-200
+           {{ !$answered ? 'hover:scale-105 cursor-pointer' : 'cursor-default opacity-75' }}">
         <img
             src="{{ $productB['image_url'] }}"
             alt="{{ $productB['name'] }}"
@@ -60,7 +51,7 @@ new class extends Component
             </p>
             <p class="text-gray mt-1 text-sm md:text-base lg:text-lg xl:text-xl min-h-[28px]">
                 @if($answered)
-                    {{ number_format(Product::getPriceById($productB['id']), 2) }} EUR
+                    {{ number_format($priceB, 2) }} EUR
                 @endif
             </p>
         </div>
