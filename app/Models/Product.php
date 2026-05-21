@@ -34,7 +34,7 @@ class Product extends Model
 
             $product = static::active()->where('id', '>=', $randomId)->first(['id', 'name', 'image_url']);
 
-            if($product && !$products->contains('id', $product->id)){ //pluck
+            if($product && !$products->contains('id', $product->id)){ 
                 $products->push($product);
             }
         }
