@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\Product;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 #[Layout('layouts.app')]
 class Game extends Component{
@@ -15,6 +17,7 @@ class Game extends Component{
     public bool $answered = false;
     private string $guess;
     private string $answer;
+    private string $sessionKey;
 
     public function mount(): void{
         $this->loadProducts();
@@ -22,6 +25,11 @@ class Game extends Component{
 
     private function loadProducts(): void{
         $products = Product::getTwoRandomProducts();
+
+        $key = Str::random(32);
+        Session::put('session_key', $key);
+        Session::put('product_a_id', $products[0]->id);
+        Session::put('product_b_id', $products[1]->id);
 
         $this->productA = [
             'id' => $products[0]->id,
@@ -37,8 +45,16 @@ class Game extends Component{
     }
 
     public function guess(string $guess): void{
-        $priceA = Product::getPriceById($this->productA['id']);
-        $priceB = Product::getPriceById($this->productB['id']);
+        $sessionIdA = Session::get('product_a_id');
+        $sessionIdB = Session::get('product_b_id');
+
+        if($this->productA['id'] !== $sessionIdA || $this->productB['id'] !== $sessionIdB){
+            $this->loadProducts();
+            return;
+        }
+
+        $priceA = Product::getPriceById($sessionIdA);
+        $priceB = Product::getPriceById($sessionIdB);
 
         $this->guess = $guess;
         $this->answer = $priceA > $priceB ? 'higher' : 'lower';
@@ -52,6 +68,8 @@ class Game extends Component{
         }
 
         $this->answered = true;
+
+        Session::forget('session_key');
     }
 
     public function nextRound(): void{
