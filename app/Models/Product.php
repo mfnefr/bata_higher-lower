@@ -28,28 +28,19 @@ class Product extends Model
     }
 
     public static function getTwoRandomProducts(): array{
+        $activeIds = static::active()->pluck('id')->toArray();
+
         if(static::active()->count() < 2){
             throw new \Exception("Not enough active products available.");
         }
 
-        $minId = static::active()->min('id');
-        $maxId = static::active()->max('id');
+        $randomIds = array_rand($activeIds, 2);
 
-        $products = collect();
-        $attempts = 0;
+        $products = static::active()->whereIn('id',
+            [ $activeIds[$randomIds[0]], $activeIds[$randomIds[1]] ]
+        )->get(['id', 'name', 'image_url']);
 
-        while($products->count() < 2 && $attempts < 10){
-            $attempts++;
-            $randomId = rand($minId, $maxId);
-
-            $product = static::active()->where('id', '>=', $randomId)->first(['id', 'name', 'image_url']);
-
-            if($product && !$products->contains('id', $product->id)){
-                $products->push($product);
-            }
-        }
-
-        return $products->all();
+        return $products->shuffle()->all();
     }
 
     public static function getPriceById(int $id): array{
