@@ -20,7 +20,18 @@
             </p>
             <p class="text-gray mt-1 text-sm md:text-base lg:text-lg xl:text-xl min-h-[28px]">
                 @if($answered)
-                    {{ number_format($priceA, 2) }} EUR
+                    @if($salePriceA !== null)
+                        <span class="line-through text-gray-400 font-normal mr-2">
+                            {{ number_format($priceA, 2) }} EUR
+                        </span>
+                        <span class="text-red-500">
+                            {{ number_format($salePriceA, 2) }} EUR
+                        </span>
+                    @else
+                        <span class="text-gray-600">
+                            {{ number_format($priceA, 2) }} EUR
+                        </span>
+                    @endif
                 @endif
             </p>
         </div>
@@ -51,7 +62,18 @@
             </p>
             <p class="text-gray mt-1 text-sm md:text-base lg:text-lg xl:text-xl min-h-[28px]">
                 @if($answered)
-                    {{ number_format($priceB, 2) }} EUR
+                    @if($salePriceB !== null)
+                        <span class="line-through text-gray-400 font-normal mr-2">
+                            {{ number_format($priceB, 2) }} EUR
+                        </span>
+                        <span class="text-red-500">
+                            {{ number_format($salePriceB, 2) }} EUR
+                        </span>
+                    @else
+                        <span class="text-gray-600">
+                            {{ number_format($priceB, 2) }} EUR
+                        </span>
+                    @endif
                 @endif
             </p>
         </div>

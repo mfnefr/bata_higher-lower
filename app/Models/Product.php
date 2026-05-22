@@ -13,11 +13,13 @@ class Product extends Model
         'price',
         'image_url',
         'is_active',
+        'sale_price',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'price' => 'float',
+        'sale_price' => 'float',
     ];
 
     public function scopeActive(Builder $query): Builder
@@ -42,7 +44,7 @@ class Product extends Model
 
             $product = static::active()->where('id', '>=', $randomId)->first(['id', 'name', 'image_url']);
 
-            if($product && !$products->contains('id', $product->id)){ 
+            if($product && !$products->contains('id', $product->id)){
                 $products->push($product);
             }
         }
@@ -50,7 +52,12 @@ class Product extends Model
         return $products->all();
     }
 
-    public static function getPriceById(int $id): float{
-        return (float) static::active()->where('id', $id)->value('price');
+    public static function getPriceById(int $id): array{
+        $product = static::active()->where('id', $id)->first(['price', 'sale_price']);
+
+        return[
+            'price' => (float) $product->price,
+            'sale_price' => $product->sale_price !== null ? (float) $product->sale_price : null,
+        ];
     }
 }

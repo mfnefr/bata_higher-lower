@@ -15,6 +15,8 @@ class Game extends Component{
     public bool $answered = false;
     public float $priceA = 0;
     public float $priceB = 0;
+    public ?float $salePriceA = null;
+    public ?float $salePriceB = null;
     private string $guess;
     private string $answer;
 
@@ -43,13 +45,21 @@ class Game extends Component{
             return;
         }
 
-        $this->priceA = Product::getPriceById($this->productA['id']);
-        $this->priceB = Product::getPriceById($this->productB['id']);
+        $pricesA = Product::getPriceById($this->productA['id']);
+        $pricesB = Product::getPriceById($this->productB['id']);
+
+        $this->priceA = $pricesA['price'];
+        $this->priceB = $pricesB['price'];
+        $this->salePriceA = $pricesA['sale_price'];
+        $this->salePriceB = $pricesB['sale_price'];
+
+        $finalPriceA = $this->salePriceA !== null ? $this->salePriceA : $this->priceA;
+        $finalPriceB = $this->salePriceB !== null ? $this->salePriceB : $this->priceB;
 
         $this->guess = $guess;
-        $this->answer = $this->priceA > $this->priceB ? $this->productA['id'] : $this->productB['id'];
+        $this->answer = $finalPriceA > $finalPriceB ? $this->productA['id'] : $this->productB['id'];
 
-        if($this->priceA === $this->priceB || $this->guess === $this->answer){
+        if($finalPriceA === $finalPriceB || $this->guess === $this->answer){
             $this->score++;
             $this->result = 'correct';
         }else{
@@ -67,6 +77,8 @@ class Game extends Component{
         $this->answered = false;
         $this->priceA = 0;
         $this->priceB = 0;
+        $this->salePriceA = null;
+        $this->salePriceB = null;
         $this->loadProducts();
     }
 

@@ -58,22 +58,25 @@ class XmlImportService{
         $externalId = (string) $g->id;
         $name = (string) $g->title;
         $priceRaw = (string) $g->price;
+        $salePriceRaw = (string) $g->sale_price;
         $availability = (string) $g->availability;
         $mpn = (string) $g->mpn;
         $imageUrl = (string) $g->image_link;
 
         $price = $this->parsePrice($priceRaw);
+        $salePrice = !empty($salePriceRaw) ? $this->parsePrice($salePriceRaw) : null;
 
         if(empty($imageUrl) || $price <= 0 || $availability !== 'in stock' || isset($processedMpn[$mpn])){
             return null;
         }
 
         $processedMpn[$mpn] = true;
-        
+
         return [
             'external_id' => $externalId,
             'name' => $name,
             'price' => $price,
+            'sale_price' => $salePrice !== null ? number_format($salePrice, 2, '.', '') : null,
             'image_url' => $imageUrl,
             'is_active' => true,
             'created_at' => now(),
@@ -85,7 +88,7 @@ class XmlImportService{
         Product::upsert(
             $batch,
             ['external_id'],
-            ['name', 'price', 'image_url', 'is_active', 'updated_at']
+            ['name', 'price', 'sale_price', 'image_url', 'is_active', 'updated_at']
         );
     }
 
