@@ -13,8 +13,8 @@ class Game extends Component{
     public array $productB = [];
     public string $result = '';
     public bool $answered = false;
-    public int $priceA = 0;
-    public int $priceB = 0;
+    public float $priceA = 0;
+    public float $priceB = 0;
     private string $guess;
     private string $answer;
 
