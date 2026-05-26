@@ -1,13 +1,31 @@
-<div class="min-h-screen flex flex-col items-center justify-center p-4 w-full">
-    <div class="text-center mb-8">
-        <p class="text-4xl font-bold text-white">Score: {{ $score }}</p>
-    </div>
+<div>
+    <header class="border-b border-gray-300 py-4 shadow-sm">
+        <div class="container mx-auto flex justify-between items-center px-5 max-w-7xl">
 
-    <h1 class="text-xl mb-6 text-center text-white">Which product is more expensive?</h1>
+            <div>
+                <a href="/" class="text-2xl font-bold text-black no-underline hover:text-gray-600 transition-colors">
+                    <img
+                        src="{{ asset('images/logo.png') }}"
+                        alt="Baťa Logo"
+                        class="h-8 inline-block mr-2"
+                    >
+                </a>
+            </div>
+
+            <div class="text-2xl font-bold px-4 py-2">
+                Score: <span class="font-bold text-black text-2xl">{{ $score }}</span>
+            </div>
+
+        </div>
+    </header>
+
+<div class="min-h-screen flex flex-col items-center justify-center p-4 w-full">
+
+    <h1 class="text-xl mb-6 text-center text-dark">Which product is more expensive?</h1>
 
     <div class="flex flex-col md:flex-row gap-6 w-full max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto justify-center items-stretch">
 
-    <button wire:click="guess({{ $productA['id'] }})" @disabled($answered) class="flex-1 rounded-2xl overflow-hidden shadow-lg bg-white transition-all duration-200
+    <button wire:click="guess({{ $productA['id'] }})" @disabled($answered) class="flex-1 rounded-2xl overflow-hidden shadow-lg bg-[#f0f0f0] transition-all duration-200
            {{ !$answered ? 'hover:scale-105 cursor-pointer' : 'cursor-default opacity-75' }}">
         <img
             src="{{ $productA['image_url'] }}"
@@ -37,7 +55,7 @@
         </div>
     </button>
 
-    <div class="flex items-center justify-center text-3xl lg:text-4xl xl:text-5xl font-bold text-white">
+    <div class="flex items-center justify-center text-3xl lg:text-4xl xl:text-5xl font-bold text-dark">
         @if($answered)
             @if($result === 'correct')
                 ✅
@@ -49,7 +67,7 @@
         @endif
     </div>
 
-    <button wire:click="guess({{ $productB['id'] }})" @disabled($answered) class="flex-1 rounded-2xl overflow-hidden shadow-lg bg-white transition-all duration-200
+    <button wire:click="guess({{ $productB['id'] }})" @disabled($answered) class="flex-1 rounded-2xl overflow-hidden shadow-lg bg-[#f0f0f0] transition-all duration-200
            {{ !$answered ? 'hover:scale-105 cursor-pointer' : 'cursor-default opacity-75' }}">
         <img
             src="{{ $productB['image_url'] }}"
@@ -85,11 +103,11 @@
         @if($answered)
             <button
                 wire:click="nextRound"
-                class="mt-4 px-8 py-3 bg-white hover:bg-gray-200 text-gray-900 rounded-xl text-lg font-semibold transition"
+                class="mt-4 px-8 py-3 bg-black hover:bg-gray-700 text-white rounded-xl text-lg font-semibold transition"
             >
                 Next product →
             </button>
         @endif
     </div>
-
+</div>
 </div>
