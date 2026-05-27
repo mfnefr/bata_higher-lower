@@ -3,16 +3,20 @@
 namespace App\Livewire;
 
 use App\Models\Product;
+use App\Models\Player;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.app')]
 class Game extends Component{
     public int $score = 0;
+    public int $bestScore = 0;
     public array $productA = [];
     public array $productB = [];
     public string $result = '';
     public bool $answered = false;
+    public bool $showGameOver = false;
+    public string $name = '';
     public float $priceA = 0;
     public float $priceB = 0;
     public ?float $salePriceA = null;
@@ -63,8 +67,8 @@ class Game extends Component{
             $this->score++;
             $this->result = 'correct';
         }else{
-            $this->score = 0;
             $this->result = 'wrong';
+            $this->wrongAnswer();
         }
 
         $this->answered = true;
@@ -80,6 +84,43 @@ class Game extends Component{
         $this->salePriceA = null;
         $this->salePriceB = null;
         $this->loadProducts();
+    }
+
+    private function wrongAnswer(): void{
+        $this->showGameOver = true;
+
+        if(session()->has('name')){
+            $this->name = session('name');
+            $player = Player::where('name', $this->name)->first();
+
+            if($player){
+                $this->bestScore = $player->score;
+
+                if($this->score > $this->bestScore){
+                    $player->update(['score' => $this->score]);
+                    $this->bestScore = $this->score;
+                }
+            }
+        }
+    }
+
+    public function saveScore(): void{
+        $this->validate(['name' => 'required|min:2|max:30']);
+        $player = Player::where('name', $this->name)->first();
+
+        if($player){
+            if($this->score > $player->score){
+                $player->update(['score' => $this->score]);
+            }
+        }else{
+            Player::create(['name' => $this->name, 'score' => $this->score]);
+        }
+
+        session(['name' => $this->name]);
+        
+        $this->score = 0;
+        $this->name = '';
+        $this->showGameOver = false;
     }
 
     public function render(){

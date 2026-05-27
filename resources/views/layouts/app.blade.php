@@ -21,10 +21,10 @@
             </div>
 
             <div class="flex space-x-6 text-2xl">
-                <a href="#" class="text-black hover:text-gray-300 transition-colors"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="text-black hover:text-gray-300 transition-colors"><i class="fab fa-pinterest-p"></i></a>
-                <a href="#" class="text-black hover:text-gray-300 transition-colors"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-black hover:text-gray-300 transition-colors"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/BataCzech/" class="text-black hover:text-blue-500 transition-colors" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://cz.pinterest.com/batashoes/" class="text-black hover:text-red-800 transition-colors" target="_blank"><i class="fab fa-pinterest-p"></i></a>
+                <a href="https://www.instagram.com/bataeurope/" class="text-black hover:text-pink-600 transition-colors" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.youtube.com/c/bataceskoytb" class="text-black hover:text-red-600 transition-colors" target="_blank"><i class="fab fa-youtube"></i></a>
             </div>
 
         </div>
