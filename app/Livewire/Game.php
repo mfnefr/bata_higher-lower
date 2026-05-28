@@ -10,6 +10,7 @@ use Livewire\Attributes\Layout;
 #[Layout('layouts.app')]
 class Game extends Component{
     public int $score = 0;
+    public int $totalScore = 0;
     public int $bestScore = 0;
     public array $productA = [];
     public array $productB = [];
@@ -95,11 +96,14 @@ class Game extends Component{
 
             if($player){
                 $this->bestScore = $player->score;
+                $this->totalScore = $player->total_score + $this->score;
 
-                if($this->score > $this->bestScore){
-                    $player->update(['score' => $this->score]);
-                    $this->bestScore = $this->score;
-                }
+                $this->bestScore = max($this->bestScore, $this->score);
+
+                $player->update([
+                    'score' => $this->bestScore,
+                    'total_score' => $this->totalScore,
+                ]);
             }
         }
     }
@@ -109,11 +113,12 @@ class Game extends Component{
         $player = Player::where('name', $this->name)->first();
 
         if($player){
-            if($this->score > $player->score){
-                $player->update(['score' => $this->score]);
-            }
+            $player->update([
+                'score' => max($player->score, $this->score),
+                'total_score' => $player->total_score + $this->score,
+            ]);
         }else{
-            Player::create(['name' => $this->name, 'score' => $this->score]);
+            Player::create(['name' => $this->name, 'score' => $this->score, 'total_score' => $this->score]);
         }
 
         session(['name' => $this->name]);

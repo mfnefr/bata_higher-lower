@@ -8,33 +8,29 @@ use Livewire\Attributes\Layout;
 
 #[Layout('layouts.app')]
 class Leaderboard extends Component{
+    public string $typeOfScore = 'score';
+    public string $timeFilter = 'allTime';
 
-    public $leaderboard = [];
-
-    public function mount(){
-        $this->allTime();
+    public function setTimeFilter(string $filter){
+        $this->timeFilter = $filter;
     }
 
-    public function allTime(){
-        $this->leaderboard = Player::orderBy('score', 'desc')->take(10)->get();
-    }
-
-    public function thisYear(){
-        $this->leaderboard = Player::whereYear('updated_at', now()->year)
-            ->orderByDesc('score')
-            ->take(10)
-            ->get();
-    }
-
-    public function thisMonth(){
-        $this->leaderboard = Player::whereMonth('updated_at', now()->month)
-            ->whereYear('updated_at', now()->year)
-            ->orderByDesc('score')
-            ->take(10)
-            ->get();
+    public function setTypeOfScore(string $type){
+        $this->typeOfScore = $type;
     }
 
     public function render(){
-        return view('livewire.leaderboard');
+        $query = Player::query();
+
+        if($this->timeFilter === 'thisYear'){
+            $query->whereYear('updated_at', now()->year);
+        }elseif($this->timeFilter === 'thisMonth'){
+            $query->whereYear('updated_at', now()->year)
+                  ->whereMonth('updated_at', now()->month);
+        }
+
+        $leaderboard = $query->orderByDesc($this->typeOfScore)->take(10)->get();
+
+        return view('livewire.leaderboard', ['leaderboard' => $leaderboard]);
     }
 }

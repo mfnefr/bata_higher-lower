@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Player extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'score'];
+    protected $fillable = ['name', 'score', 'total_score'];
 }

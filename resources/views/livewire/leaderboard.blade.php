@@ -36,24 +36,41 @@
                     <div class="py-1">
                         <button 
                             type="button"
-                            wire:click="allTime" 
+                            wire:click="setTimeFilter('allTime')" 
                             class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                         >
                              All Time
                         </button>
                         <button 
                             type="button"
-                            wire:click="thisYear" 
+                            wire:click="setTimeFilter('thisYear')" 
                             class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                         >
                              This Year
                         </button>
                         <button 
                             type="button"
-                            wire:click="thisMonth" 
+                            wire:click="setTimeFilter('thisMonth')" 
                             class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                         >
                             This Month
+                        </button>
+
+                        <div class="border-t border-gray-400 my-1"></div>
+
+                        <button 
+                            type="button"
+                            wire:click="setTypeOfScore('score')" 
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                        >
+                            Best Score
+                        </button>
+                        <button 
+                            type="button"
+                            wire:click="setTypeOfScore('total_score')" 
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                        >
+                            Total Score
                         </button>
                     </div>
                 </div>
@@ -78,7 +95,7 @@
             <span class="text-lg font-bold text-gray-800">{{ $loop->iteration }}.</span>
             <span class="text-lg font-medium text-gray-700">{{ $player->name }}</span>
         </div>
-        <span class="text-lg font-semibold text-gray-900">{{ $player->score }} pts</span>
+        <span class="text-lg font-semibold text-gray-900">{{ $typeOfScore === 'score' ? $player->score : $player->total_score }} pts</span>
     </div>
 @endforeach
 </div>
