@@ -13,8 +13,8 @@
             </div>
 
             <div class="flex-1 flex justify-end text-2xl font-bold px-4 py-2">
-                <a href="/leaderboard" class="no-underline hover:text-gray-600 transition-colors">
-                    <i class="fas fa-trophy"></i> Leaderboard
+                <a href="/leaderboard" class="no-underline hover:text-red-700 text-red-600 transition-colors">
+                    <i class="fas fa-trophy text-gray-600"></i> Leaderboard
                 </a>
             </div>
 

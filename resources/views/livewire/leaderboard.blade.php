@@ -7,6 +7,57 @@
                     <img src="{{ asset('images/logo.png') }}" alt="Baťa Logo" class="h-8 inline-block mr-2">
                 </a>
             </div>
+
+            <div x-data="{ open: false }" class="relative inline-block text-left">
+    
+                <div>
+                    <button 
+                        @click="open = !open" 
+                        @click.outside="open = false"
+                        type="button" 
+                        class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
+                    >
+                        Filter by: 
+                        <i class="ml-2 mt-1 text-xs fas fa-chevron-down"></i>
+                    </button>
+                </div>
+
+                <div 
+                    x-show="open" 
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="absolute right-0 z-50 w-48 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    x-cloak
+                >
+                    <div class="py-1">
+                        <button 
+                            type="button"
+                            wire:click="allTime" 
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                        >
+                             All Time
+                        </button>
+                        <button 
+                            type="button"
+                            wire:click="thisYear" 
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                        >
+                             This Year
+                        </button>
+                        <button 
+                            type="button"
+                            wire:click="thisMonth" 
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
+                        >
+                            This Month
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 <div class="container mx-auto my-8 p-4">
