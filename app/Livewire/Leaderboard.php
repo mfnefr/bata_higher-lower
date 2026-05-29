@@ -10,6 +10,7 @@ use Livewire\Attributes\Layout;
 class Leaderboard extends Component{
     public string $typeOfScore = 'score';
     public string $timeFilter = 'allTime';
+    public string $search = '';
 
     public function setTimeFilter(string $filter){
         $this->timeFilter = $filter;
@@ -32,13 +33,35 @@ class Leaderboard extends Component{
         };
 
         if($this->typeOfScore === 'score'){
-            $query->withMax(['gameLogs' => $timeCondition], 'score')->orderByDesc('game_logs_max_score');
+            $query->withMax(['gameLogs' => $timeCondition], 'score')->having('game_logs_max_score', '>=', 0)->orderByDesc('game_logs_max_score');
         }else{
-            $query->withSum(['gameLogs' => $timeCondition], 'score')->orderByDesc('game_logs_sum_score');
+            $query->withSum(['gameLogs' => $timeCondition], 'score')->having('game_logs_sum_score', '>=', 0)->orderByDesc('game_logs_sum_score');
         }
 
-        $leaderboard = $query->take(10)->get();
+        $allPlayers = $query->get();
+        $leaderboard = collect();
+        $searchedPlayerId = null;
 
-        return view('livewire.leaderboard', ['leaderboard' => $leaderboard]);
+        if (!empty($this->search)) {
+            $searchedIndex = $allPlayers->search(function ($player) {
+                return stripos($player->name, $this->search) !== false;
+            });
+
+            if ($searchedIndex !== false) {
+                $searchedPlayerId = $allPlayers[$searchedIndex]->id;
+
+                if ($searchedIndex < 5) {
+                    $leaderboard = $allPlayers->take(10);
+                } else {
+                    $leaderboard = $allPlayers->slice($searchedIndex - 5, 10);
+                }
+            } else {
+                $leaderboard = $allPlayers->take(10);
+            }
+        } else {
+            $leaderboard = $allPlayers->take(10);
+        }
+
+        return view('livewire.leaderboard', ['leaderboard' => $leaderboard, 'searchedPlayerId' => $searchedPlayerId]);
     }
 }
