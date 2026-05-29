@@ -133,11 +133,22 @@
                     </p>
 
                     @if(session()->has('name'))
-                    <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <p class="text-sm text-gray-600">You: <span class="font-bold text-gray-900">{{ session('name')
-                                }}</span></p>
-                        <p class="text-sm text-gray-600 mt-1">Your personal best: <span
-                                class="font-bold text-green-600">{{ $bestScore }}</span></p>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+    
+                        <div>
+                            <p class="text-sm text-gray-600">You: <span class="font-bold text-gray-900">{{ session('name') }}</span></p>
+                            <p class="text-sm text-gray-600 mt-1">Your personal best: <span class="font-bold text-green-600">{{ $bestScore }}</span></p>
+                        </div>
+
+                        <button 
+                            type="button"
+                            wire:click="logOut" 
+                            class="p-2 text-red-500 transition-colors rounded-md hover:bg-gray-200 hover:text-red-700 focus:outline-none"
+                            title="Log Out"
+                        >
+                            <i class="text-lg fas fa-sign-out-alt"></i>
+                        </button>
+
                     </div>
 
                     <div class="flex gap-3 mt-8">

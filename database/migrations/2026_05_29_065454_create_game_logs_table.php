@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('players', function (Blueprint $table) {
-            //$table->integer('total_score')->nullable()->after('score');
+        Schema::create('game_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('player_id')->constrained()->cascadeOnDelete();
+            $table->integer('score');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('players', function (Blueprint $table) {
-            $table->dropColumn('total_score');
-        });
+        Schema::dropIfExists('game_logs');
     }
 };

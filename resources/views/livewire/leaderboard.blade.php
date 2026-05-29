@@ -95,7 +95,7 @@
             <span class="text-lg font-bold text-gray-800">{{ $loop->iteration }}.</span>
             <span class="text-lg font-medium text-gray-700">{{ $player->name }}</span>
         </div>
-        <span class="text-lg font-semibold text-gray-900">{{ $typeOfScore === 'score' ? $player->score : $player->total_score }} pts</span>
+        <span class="text-lg font-semibold text-gray-900">{{ $typeOfScore === 'score' ? $player->game_logs_max_score : $player->game_logs_sum_score }} pts</span>
     </div>
 @endforeach
 </div>

@@ -10,7 +10,6 @@ use Livewire\Attributes\Layout;
 #[Layout('layouts.app')]
 class Game extends Component{
     public int $score = 0;
-    public int $totalScore = 0;
     public int $bestScore = 0;
     public array $productA = [];
     public array $productB = [];
@@ -95,15 +94,8 @@ class Game extends Component{
             $player = Player::where('name', $this->name)->first();
 
             if($player){
-                $this->bestScore = $player->score;
-                $this->totalScore = $player->total_score + $this->score;
-
-                $this->bestScore = max($this->bestScore, $this->score);
-
-                $player->update([
-                    'score' => $this->bestScore,
-                    'total_score' => $this->totalScore,
-                ]);
+                $player->gameLogs()->create(['score' => $this->score]);
+                $this->bestScore = $player->gameLogs()->max('score') ?? 0;
             }
         }
     }
@@ -112,20 +104,23 @@ class Game extends Component{
         $this->validate(['name' => 'required|min:2|max:30']);
         $player = Player::where('name', $this->name)->first();
 
-        if($player){
-            $player->update([
-                'score' => max($player->score, $this->score),
-                'total_score' => $player->total_score + $this->score,
-            ]);
-        }else{
-            Player::create(['name' => $this->name, 'score' => $this->score, 'total_score' => $this->score]);
+        if(!$player){
+            $player = Player::create(['name' => $this->name]);
+            $this->bestScore = $player->gameLogs()->max('score') ?? 0;
         }
+
+        $player->gameLogs()->create(['score' => $this->score]);
 
         session(['name' => $this->name]);
         
         $this->score = 0;
         $this->name = '';
         $this->showGameOver = false;
+    }
+
+    public function logOut(){
+        session()->forget('name');
+        return redirect('/');
     }
 
     public function render(){

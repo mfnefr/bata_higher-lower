@@ -9,4 +9,8 @@ class Player extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'score', 'total_score'];
+
+    public function gameLogs(){
+        return $this->hasMany(GameLog::class);
+    }
 }

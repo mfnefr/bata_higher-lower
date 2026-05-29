@@ -22,14 +22,22 @@ class Leaderboard extends Component{
     public function render(){
         $query = Player::query();
 
-        if($this->timeFilter === 'thisYear'){
-            $query->whereYear('updated_at', now()->year);
-        }elseif($this->timeFilter === 'thisMonth'){
-            $query->whereYear('updated_at', now()->year)
-                  ->whereMonth('updated_at', now()->month);
+        $timeCondition = function($query){
+            if($this->timeFilter === 'thisYear'){
+                $query->whereYear('updated_at', now()->year);
+            }elseif($this->timeFilter === 'thisMonth'){
+                $query->whereYear('updated_at', now()->year)
+                    ->whereMonth('updated_at', now()->month);
+            }
+        };
+
+        if($this->typeOfScore === 'score'){
+            $query->withMax(['gameLogs' => $timeCondition], 'score')->orderByDesc('game_logs_max_score');
+        }else{
+            $query->withSum(['gameLogs' => $timeCondition], 'score')->orderByDesc('game_logs_sum_score');
         }
 
-        $leaderboard = $query->orderByDesc($this->typeOfScore)->take(10)->get();
+        $leaderboard = $query->take(10)->get();
 
         return view('livewire.leaderboard', ['leaderboard' => $leaderboard]);
     }
