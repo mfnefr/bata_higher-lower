@@ -119,6 +119,16 @@
 
             <div x-show="$wire.showGameOver"
                 class="inline-block px-8 pt-6 pb-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-lg shadow-2xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                
+                <button 
+                    type="button" 
+                    wire:click="closeModal" 
+                    class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors focus:outline-none"
+                    title="Close without saving"
+                >
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+
                 <div class="flex items-center mb-6">
                     <div class="w-full text-center mb-6">
                         <h3 class="block text-3xl font-bold text-gray-900 mx-auto" id="modal-title">

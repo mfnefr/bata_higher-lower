@@ -86,6 +86,11 @@ class Game extends Component{
         $this->loadProducts();
     }
 
+    public function closeModal(): void{
+        $this->score = 0;
+        $this->showGameOver = false;
+    }
+
     private function wrongAnswer(): void{
         $this->showGameOver = true;
 

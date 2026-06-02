@@ -50,6 +50,7 @@
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
                                     All Time
+                                    @if ($timeFilter === 'allTime') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                             <button
                                 type="button"
@@ -57,6 +58,7 @@
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
                                     This Year
+                                    @if ($timeFilter === 'thisYear') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                             <button
                                 type="button"
@@ -64,6 +66,7 @@
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
                                 This Month
+                                @if ($timeFilter === 'thisMonth') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
 
                             <div class="border-t border-gray-400 my-1"></div>
@@ -74,6 +77,7 @@
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
                                 Best Score
+                                @if ($typeOfScore === 'score') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                             <button
                                 type="button"
@@ -81,6 +85,7 @@
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
                                 Total Score
+                                @if ($typeOfScore === 'total_score') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                         </div>
                     </div>
