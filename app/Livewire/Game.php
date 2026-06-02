@@ -94,7 +94,6 @@ class Game extends Component{
             $player = Player::where('name', $this->name)->first();
 
             if($player){
-                $player->gameLogs()->create(['score' => $this->score]);
                 $this->bestScore = $player->gameLogs()->max('score') ?? 0;
             }
         }
@@ -112,7 +111,7 @@ class Game extends Component{
         $player->gameLogs()->create(['score' => $this->score]);
 
         session(['name' => $this->name]);
-        
+
         $this->score = 0;
         $this->name = '';
         $this->showGameOver = false;
