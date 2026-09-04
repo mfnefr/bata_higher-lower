@@ -16,8 +16,14 @@ class SyncXmlFeed extends Command
         $this->info("Starting XML feed synchronization...");
 
         $feeds = [
-            'cz' => ['url' => 'https://bata-feed.s3.eu-central-1.amazonaws.com/feeds/google/google_cz.xml'],
-            'en' => ['url' => 'https://bata-feed.s3.eu-central-1.amazonaws.com/feeds/google/google_eu_nl.xml']
+            'cz' => [
+                'url' => 'https://bata-feed.s3.eu-central-1.amazonaws.com/feeds/google/google_cz.xml',
+                'currency' => 'Kč'
+                ],
+            'en' => [
+                'url' => 'https://bata-feed.s3.eu-central-1.amazonaws.com/feeds/google/google_eu_nl.xml',
+                'currency' => '€'
+            ]
         ];
 
         $totalProcessed = 0;
@@ -28,7 +34,7 @@ class SyncXmlFeed extends Command
             $this->line("URL: {$config['url']}");
 
             try{
-                $stats = $importService->import($config['url'], $locale);
+                $stats = $importService->import($config['url'], $locale, $config['currency']);
 
                 $this->comment("   -> Processed: {$stats['processed']}");
                 $this->comment("   -> Skipped: {$stats['skipped']}");

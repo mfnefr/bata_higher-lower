@@ -9,7 +9,7 @@ use XMLReader;
 class XmlImportService{
     private string $namespace = 'http://base.google.com/ns/1.0';
 
-    public function import(string $feedUrl, string $locale): array{
+    public function import(string $feedUrl, string $locale, string $currency): array{
         $stats = ['processed' => 0, 'skipped' => 0];
         $processedMpn = [];
         $batch = [];
@@ -24,7 +24,7 @@ class XmlImportService{
             if($reader->nodeType === XMLReader::ELEMENT && $reader->localName === 'item'){
                 $xml = simplexml_load_string($reader->readOuterXML());
 
-                $itemData = $this->processItem($xml, $processedMpn, $locale);
+                $itemData = $this->processItem($xml, $processedMpn, $locale, $currency);
 
                 if($itemData === null){
                     $stats['skipped']++;
@@ -52,7 +52,7 @@ class XmlImportService{
         return $stats;
     }
 
-    private function processItem(\SimpleXMLElement $item, array &$processedMpn, string $locale): ?array{
+    private function processItem(\SimpleXMLElement $item, array &$processedMpn, string $locale, string $currency): ?array{
         $g = $item->children($this->namespace);
 
         $externalId = (string) $g->id;
@@ -87,6 +87,7 @@ class XmlImportService{
             'locale' => $locale,
             'name' => $name,
             'price' => $price,
+            'currency' => $currency,
             'sale_price' => $salePrice !== null ? number_format($salePrice, 2, '.', '') : null,
             'image_url' => $imageUrl,
             'is_active' => true,
@@ -99,7 +100,7 @@ class XmlImportService{
         Product::upsert(
             $batch,
             ['external_id', 'locale'],
-            ['name', 'price', 'sale_price', 'image_url', 'is_active', 'updated_at']
+            ['name', 'price', 'currency', 'sale_price', 'image_url', 'is_active', 'updated_at']
         );
     }
 

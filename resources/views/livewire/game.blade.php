@@ -39,14 +39,26 @@
                         @if($answered)
                         @if($salePriceA !== null)
                         <span class="line-through text-gray-400 font-normal mr-2">
-                            {{ number_format($priceA, 2) }} EUR
+                            @if($productA['currency'] === 'Kč')
+                                {{ number_format($priceA, 0, ",", " ") }} {{ $productA['currency'] }}
+                            @else
+                                {{ number_format($priceA, 2) }} {{ $productA['currency'] }}
+                            @endif
                         </span>
                         <span class="text-red-500">
-                            {{ number_format($salePriceA, 2) }} EUR
+                            @if($productA['currency'] === 'Kč')
+                                {{ number_format($salePriceA, 0, ",", " ") }} {{ $productA['currency'] }}
+                            @else
+                                {{ number_format($salePriceA, 2) }} {{ $productA['currency'] }}
+                            @endif
                         </span>
                         @else
                         <span class="text-gray-600">
-                            {{ number_format($priceA, 2) }} EUR
+                            @if($productA['currency'] === 'Kč')
+                                {{ number_format($priceA, 0, ",", " ") }} {{ $productA['currency'] }}
+                            @else
+                                {{ number_format($priceA, 2) }} {{ $productA['currency'] }}
+                            @endif
                         </span>
                         @endif
                         @endif
@@ -79,14 +91,26 @@
                         @if($answered)
                         @if($salePriceB !== null)
                         <span class="line-through text-gray-400 font-normal mr-2">
-                            {{ number_format($priceB, 2) }} EUR
+                            @if ($productB['currency'] === 'Kč')
+                                {{ number_format($priceB, 0, ",", " ") }} {{ $productB['currency'] }}
+                            @else
+                                {{ number_format($priceB, 2) }} {{ $productB['currency'] }}
+                            @endif
                         </span>
                         <span class="text-red-500">
-                            {{ number_format($salePriceB, 2) }} EUR
+                            @if($productB['currency'] === 'Kč')
+                                {{ number_format($salePriceB, 0, ",", " ") }} {{ $productB['currency'] }}
+                            @else
+                                {{ number_format($salePriceB, 2) }} {{ $productB['currency'] }}
+                            @endif
                         </span>
                         @else
                         <span class="text-gray-600">
-                            {{ number_format($priceB, 2) }} EUR
+                            @if($productB['currency'] === 'Kč')
+                                {{ number_format($priceB, 0, ",", " ") }} {{ $productB['currency'] }}
+                            @else
+                                {{ number_format($priceB, 2) }} {{ $productB['currency'] }}
+                            @endif
                         </span>
                         @endif
                         @endif

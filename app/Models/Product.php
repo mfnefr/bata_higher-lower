@@ -12,6 +12,7 @@ class Product extends Model
         'locale',
         'name',
         'price',
+        'currency',
         'image_url',
         'is_active',
         'sale_price',
@@ -39,7 +40,7 @@ class Product extends Model
 
         $products = static::active()->whereIn('id',
             [ $activeIds[$randomIds[0]], $activeIds[$randomIds[1]] ]
-        )->get(['id', 'name', 'image_url']);
+        )->get(['id', 'name', 'image_url', 'currency']);
 
         return $products->shuffle()->all();
     }

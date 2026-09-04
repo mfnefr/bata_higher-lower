@@ -37,12 +37,14 @@ class Game extends Component{
             'id' => $products[0]->id,
             'name' => $products[0]->name,
             'image_url' => $products[0]->image_url,
+            'currency' => $products[0]->currency,
         ];
 
         $this->productB = [
             'id' => $products[1]->id,
             'name' => $products[1]->name,
             'image_url' => $products[1]->image_url,
+            'currency' => $products[1]->currency,
         ];
     }
 
@@ -89,7 +91,7 @@ class Game extends Component{
     }
 
     public function closeModal(): void{
-        $this->score = 0; 
+        $this->score = 0;
         $this->showGameOver = false;
     }
 
