@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\XmlImportService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 
 class SyncXmlFeed extends Command
 {
@@ -38,12 +38,12 @@ class SyncXmlFeed extends Command
 
             } catch (\Throwable $e) {
                 $this->error("   [!] Error while processing feed " . strtoupper($locale) . ": " . $e->getMessage());
-                
+
                 Log::error('XML sync failed for locale: ' . $locale, [
                     'error' => $e->getMessage(),
                     'url'   => $config['url'],
                 ]);
-                
+
                 $hasError = true;
             }
         }
@@ -57,27 +57,5 @@ class SyncXmlFeed extends Command
         );
 
         return $hasError ? Command::FAILURE : Command::SUCCESS;
-
-        /*try{
-            $stats = $importService->import();
-
-            $this->table(['Vloženo', 'Přeskočeno'],
-            [[$stats['processed'], $stats['skipped']]]);
-
-            $this->info("XML feed synchronization completed successfully.");
-
-            return Command::SUCCESS;
-
-        } catch (\Throwable $e) {
-            $this->error("Error occurred while synchronizing XML feed: " . $e->getMessage());
-
-            Log::error('XML sync failed: ', [
-                'error' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-            ]);
-
-            return Command::FAILURE;
-        }*/
     }
 }

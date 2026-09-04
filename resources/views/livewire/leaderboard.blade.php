@@ -13,7 +13,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
-                    <input type="text" wire:model.live.debounce.300ms="search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 sm:text-sm transition-colors" placeholder="Search player...">
+                    <input type="text" wire:model.live.debounce.300ms="search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 sm:text-sm transition-colors" placeholder="{{ __('Search player...') }}">
                 </div>
             </div>
 
@@ -27,7 +27,7 @@
                             type="button"
                             class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
                         >
-                            Filter by:
+                            {{ __('Filter by:') }}
                             <i class="ml-2 mt-1 text-xs fas fa-chevron-down"></i>
                         </button>
                     </div>
@@ -49,7 +49,7 @@
                                 wire:click="setTimeFilter('allTime')"
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
-                                    All Time
+                                    {{ __('All Time') }}
                                     @if ($timeFilter === 'allTime') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                             <button
@@ -57,7 +57,7 @@
                                 wire:click="setTimeFilter('thisYear')"
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
-                                    This Year
+                                    {{ __('This Year') }}
                                     @if ($timeFilter === 'thisYear') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                             <button
@@ -65,7 +65,7 @@
                                 wire:click="setTimeFilter('thisMonth')"
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
-                                This Month
+                                {{ __('This Month') }}
                                 @if ($timeFilter === 'thisMonth') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
 
@@ -76,7 +76,7 @@
                                 wire:click="setTypeOfScore('score')"
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
-                                Best Score
+                                {{ __('Best Score') }}
                                 @if ($typeOfScore === 'score') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                             <button
@@ -84,26 +84,25 @@
                                 wire:click="setTypeOfScore('total_score')"
                                 class="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-700"
                             >
-                                Total Score
+                                {{ __('Total Score') }}
                                 @if ($typeOfScore === 'total_score') <i class="fas fa-check text-red-600"></i> @endif
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </header>
 <div class="container mx-auto my-8 p-4">
     <h1 class="text-2xl font-bold text-center text-red-600 my-8">
-        <i class="fas fa-trophy text-gray-600"></i> Leaderboard
+        <i class="fas fa-trophy text-gray-600"></i> {{ __('Leaderboard') }}
     </h1>
 
     <div class="flex items-center justify-between p-4 bg-white mb-2 w-full max-w-md mx-auto">
         <div class="flex items-center gap-4">
-            <span class="text-lg font-bold text-gray-800">Player</span>
+            <span class="text-lg font-bold text-gray-800">{{ __('Player') }}</span>
         </div>
-        <span class="text-lg font-bold text-gray-900">Score</span>
+        <span class="text-lg font-bold text-gray-900">{{ __('Score') }}</span>
     </div>
 
 @foreach ($leaderboard as $index => $player)

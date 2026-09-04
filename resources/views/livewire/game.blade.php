@@ -9,25 +9,20 @@
             </div>
 
             <div class="text-2xl font-bold px-4 py-2 text-center">
-                Score: <span class="font-bold text-black text-2xl">{{ $score }}</span>
+                {{ __("Score") }}: <span class="font-bold text-black text-2xl">{{ $score }}</span>
             </div>
 
             <div class="flex-1 flex justify-end text-2xl font-bold px-4 py-2">
                 <a href="/leaderboard" class="no-underline hover:text-red-700 text-red-600 transition-colors">
-                    <i class="fas fa-trophy text-gray-600"></i> Leaderboard
+                    <i class="fas fa-trophy text-gray-600"></i> {{ __("Leaderboard") }}
                 </a>
             </div>
-
-            <div>
-                <livewire:language-switcher />
-            </div>
-            
         </div>
     </header>
 
     <div class="min-h-screen flex flex-col items-center justify-center p-4 w-full">
 
-        <h1 class="text-xl mb-12 text-center text-dark">Which product is more expensive?</h1>
+        <h1 class="text-xl mb-12 text-center text-dark">{{ __("Which product is more expensive?") }}</h1>
 
         <div
             class="flex flex-col md:flex-row gap-6 w-full max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto justify-center items-stretch">
@@ -68,7 +63,7 @@
 
                 @endif
                 @else
-                OR
+                {{ __("OR") }}
                 @endif
             </div>
 
@@ -105,7 +100,7 @@
             @if($answered)
             <button wire:click="nextRound"
                 class="mt-4 px-8 py-3 bg-black hover:bg-gray-700 text-white rounded-xl text-lg font-semibold transition">
-                Next product →
+                {{ __("Next product →") }}
             </button>
             @endif
         </div>
@@ -128,7 +123,7 @@
                     type="button"
                     wire:click="closeModal"
                     class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors focus:outline-none"
-                    title="Close without saving"
+                    title="{{ __('Close without saving') }}"
                 >
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -136,29 +131,29 @@
                 <div class="flex items-center mb-6">
                     <div class="w-full text-center mb-6">
                         <h3 class="block text-3xl font-bold text-gray-900 mx-auto" id="modal-title">
-                            Game Over!
+                            {{ __("Game Over!") }}
                         </h3>
                     </div>
                 </div>
 
                 <div class="space-y-4">
                     <p class="text-lg text-gray-700">
-                        Your score: <span class="font-bold text-black">{{ $score }}</span>.
+                        {{ __("Your score:") }} <span class="font-bold text-black">{{ $score }}</span>.
                     </p>
 
                     @if(session()->has('name'))
                     <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
 
                         <div>
-                            <p class="text-sm text-gray-600">You: <span class="font-bold text-gray-900">{{ session('name') }}</span></p>
-                            <p class="text-sm text-gray-600 mt-1">Your personal best: <span class="font-bold text-green-600">{{ $bestScore }}</span></p>
+                            <p class="text-sm text-gray-600">{{ __("You:") }} <span class="font-bold text-gray-900">{{ session('name') }}</span></p>
+                            <p class="text-sm text-gray-600 mt-1">{{ __("Your personal best:") }} <span class="font-bold text-green-600">{{ $bestScore }}</span></p>
                         </div>
 
                         <button
                             type="button"
                             wire:click="logOut"
                             class="p-2 text-red-500 transition-colors rounded-md hover:bg-gray-200 hover:text-red-700 focus:outline-none"
-                            title="Log Out"
+                            title="{{ __('Log Out') }}"
                         >
                             <i class="text-lg fas fa-sign-out-alt"></i>
                         </button>
@@ -168,30 +163,30 @@
                     <div class="flex gap-3 mt-8">
                         <button type="button" wire:click="saveScore"
                             class="flex-1 px-6 py-3 text-lg font-semibold text-white transition-colors bg-red-600 rounded-lg shadow hover:bg-red-700">
-                            <i class="mr-2 fas fa-redo"></i> Play Again
+                            <i class="mr-2 fas fa-redo"></i> {{ __("Play Again") }}
                         </button>
                         <a href="/leaderboard"
                             class="px-6 py-3 text-lg font-semibold text-gray-700 transition-colors bg-gray-200 rounded-lg shadow hover:bg-gray-300">
-                            Leaderboard
+                            {{ __("Leaderboard") }}
                         </a>
                     </div>
 
                     @else
 
                     <label for="name" class="block text-sm font-medium text-gray-800">
-                        Enter your name to save your score:
+                        {{ __("Enter your name to save your score:") }}
                     </label>
 
                     <input type="text" id="name" wire:model="name"
                         class="w-full px-4 py-2.5 text-lg border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500"
-                        placeholder="Your name" autofocus>
+                        placeholder="{{ __("Your name") }}" autofocus>
                     @error('name')
                     <span class="text-sm text-red-500 mt-1">{{ $message }}</span>
                     @enderror
                     <div class="flex gap-3 mt-8">
                         <button type="button" wire:click="saveScore"
                             class="flex-1 px-6 py-3 text-lg font-semibold text-white transition-colors bg-red-600 rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                            <i class="mr-2 fas fa-trophy"></i> Save and Play Again
+                            <i class="mr-2 fas fa-trophy"></i> {{ __("Save and Play Again") }}
                         </button>
                     </div>
                     @endif
