@@ -7,24 +7,24 @@ use App\Models\Product;
 use XMLReader;
 
 class XmlImportService{
-    private string $feedUrl = 'https://bata-feed.s3.eu-central-1.amazonaws.com/feeds/google/google_eu_nl.xml';
     private string $namespace = 'http://base.google.com/ns/1.0';
 
-    public function import(): array{
+    public function import(string $feedUrl, string $locale): array{
         $stats = ['processed' => 0, 'skipped' => 0];
         $processedMpn = [];
         $batch = [];
 
         $reader = new XMLReader();
 
-        if(!$reader->open($this->feedUrl)){
-            throw new \RuntimeException("Failed to open XML feed at {$this->feedUrl}");
+        if(!$reader->open($feedUrl)){
+            throw new \RuntimeException("Failed to open XML feed at {$feedUrl}");
         }
 
         while($reader->read()){
             if($reader->nodeType === XMLReader::ELEMENT && $reader->localName === 'item'){
                 $xml = simplexml_load_string($reader->readOuterXML());
-                $itemData = $this->processItem($xml, $processedMpn);
+
+                $itemData = $this->processItem($xml, $processedMpn, $locale);
 
                 if($itemData === null){
                     $stats['skipped']++;
@@ -47,12 +47,12 @@ class XmlImportService{
             $this->insertBatch($batch);
         }
 
-        $this->deactivateMissingProducts();
+        $this->deactivateMissingProducts($locale);
 
         return $stats;
     }
 
-    private function processItem(\SimpleXMLElement $item, array &$processedMpn): ?array{
+    private function processItem(\SimpleXMLElement $item, array &$processedMpn, string $locale): ?array{
         $g = $item->children($this->namespace);
 
         $externalId = (string) $g->id;
@@ -66,14 +66,25 @@ class XmlImportService{
         $price = $this->parsePrice($priceRaw);
         $salePrice = !empty($salePriceRaw) ? $this->parsePrice($salePriceRaw) : null;
 
-        if(empty($imageUrl) || $price <= 0 || $availability !== 'in stock' || isset($processedMpn[$mpn])){
+        if(empty($imageUrl) || $price <= 0){
             return null;
         }
 
-        $processedMpn[$mpn] = true;
+        $available = strtolower(trim($availability));
+        if($available !== 'in stock' && $available !== 'in_stock'){
+            return null;
+        }
+
+        if(!empty($mpn)){
+            if(isset($processedMpn[$mpn])){
+                return null;
+            }
+            $processedMpn[$mpn] = true;
+        }
 
         return [
             'external_id' => $externalId,
+            'locale' => $locale,
             'name' => $name,
             'price' => $price,
             'sale_price' => $salePrice !== null ? number_format($salePrice, 2, '.', '') : null,
@@ -87,7 +98,7 @@ class XmlImportService{
     private function insertBatch(array $batch): void{
         Product::upsert(
             $batch,
-            ['external_id'],
+            ['external_id', 'locale'],
             ['name', 'price', 'sale_price', 'image_url', 'is_active', 'updated_at']
         );
     }
@@ -97,9 +108,9 @@ class XmlImportService{
         return (float) ($parts[0] ?? 0);
     }
 
-    private function deactivateMissingProducts(): void
+    private function deactivateMissingProducts(string $locale): void
     {
-        DB::table('products')->where('is_active', true)->where('updated_at', '<', now()->subHours(24))
+        DB::table('products')->where('locale', $locale)->where('is_active', true)->where('updated_at', '<', now()->subHours(24))
             ->update(['is_active' => false]);
     }
 }

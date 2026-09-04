@@ -9,6 +9,7 @@ class Product extends Model
 {
     protected $fillable = [
         'external_id',
+        'locale',
         'name',
         'price',
         'image_url',
@@ -27,8 +28,8 @@ class Product extends Model
         return $query->where('is_active', true);
     }
 
-    public static function getTwoRandomProducts(): array{
-        $activeIds = static::active()->pluck('id')->toArray();
+    public static function getTwoRandomProducts(string $locale): array{
+        $activeIds = static::active()->where('locale', $locale)->pluck('id')->toArray();
 
         if(static::active()->count() < 2){
             throw new \Exception("Not enough active products available.");

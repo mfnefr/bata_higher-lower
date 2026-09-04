@@ -29,7 +29,9 @@ class Game extends Component{
     }
 
     private function loadProducts(): void{
-        $products = Product::getTwoRandomProducts();
+        $locale = app()->getLocale();
+
+        $products = Product::getTwoRandomProducts($locale);
 
         $this->productA = [
             'id' => $products[0]->id,
@@ -87,7 +89,7 @@ class Game extends Component{
     }
 
     public function closeModal(): void{
-        $this->score = 0;
+        $this->score = 0; 
         $this->showGameOver = false;
     }
 

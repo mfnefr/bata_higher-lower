@@ -18,6 +18,10 @@
                 </a>
             </div>
 
+            <div>
+                <livewire:language-switcher />
+            </div>
+            
         </div>
     </header>
 
@@ -119,10 +123,10 @@
 
             <div x-show="$wire.showGameOver"
                 class="inline-block px-8 pt-6 pb-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-lg shadow-2xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                
-                <button 
-                    type="button" 
-                    wire:click="closeModal" 
+
+                <button
+                    type="button"
+                    wire:click="closeModal"
                     class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors focus:outline-none"
                     title="Close without saving"
                 >
@@ -144,15 +148,15 @@
 
                     @if(session()->has('name'))
                     <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
-    
+
                         <div>
                             <p class="text-sm text-gray-600">You: <span class="font-bold text-gray-900">{{ session('name') }}</span></p>
                             <p class="text-sm text-gray-600 mt-1">Your personal best: <span class="font-bold text-green-600">{{ $bestScore }}</span></p>
                         </div>
 
-                        <button 
+                        <button
                             type="button"
-                            wire:click="logOut" 
+                            wire:click="logOut"
                             class="p-2 text-red-500 transition-colors rounded-md hover:bg-gray-200 hover:text-red-700 focus:outline-none"
                             title="Log Out"
                         >
