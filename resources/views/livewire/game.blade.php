@@ -161,6 +161,23 @@
                 </div>
 
                 <div class="space-y-4">
+
+                    @if($brokenRecordType !== '')                           
+                            @if($brokenRecordType === 'all_time')
+                                <div class="text-red-600 font-extrabold text-2xl flex justify-center items-center gap-2">
+                                    {{ __('New All-Time World Record!') }} 
+                                </div>
+                            @elseif($brokenRecordType === 'year')
+                                <div class="text-red-600 font-bold text-xl flex justify-center items-center gap-2">
+                                    {{ __('Best Score This Year!') }}
+                                </div>
+                            @elseif($brokenRecordType === 'month')
+                                <div class="text-red-600 font-bold text-xl flex justify-center items-center gap-2">
+                                    {{ __('Best Score This Month!') }}
+                                </div>
+                            @endif
+                    @endif
+
                     <p class="text-lg text-gray-700">
                         {{ __("Your score:") }} <span class="font-bold text-black">{{ $score }}</span>.
                     </p>
@@ -219,3 +236,40 @@
         </div>
     </div>
 </div>
+
+<script>
+        window.addEventListener('trigger-confetti', (event) => {
+            
+            let duration = 3 * 1000;
+            let animationEnd = Date.now() + duration;
+            let defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99999 }; // Z-index ještě vyšší
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            let interval = setInterval(function() {
+                let timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                let particleCount = 50 * (timeLeft / duration);
+                
+                if (typeof confetti === 'function') {
+                    confetti(Object.assign({}, defaults, { 
+                        particleCount,
+                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                    }));
+                    confetti(Object.assign({}, defaults, { 
+                        particleCount,
+                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                    }));
+                } else {
+                    console.error("Knihovna canvas-confetti nebyla načtena!");
+                }
+            }, 250);
+            
+        });
+</script>

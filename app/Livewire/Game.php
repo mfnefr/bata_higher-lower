@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Models\Player;
+use App\Models\GameLog;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -14,6 +15,7 @@ class Game extends Component{
     public array $productA = [];
     public array $productB = [];
     public string $result = '';
+    public string $brokenRecordType = '';
     public bool $answered = false;
     public bool $showGameOver = false;
     public string $name = '';
@@ -87,12 +89,14 @@ class Game extends Component{
         $this->priceB = 0;
         $this->salePriceA = null;
         $this->salePriceB = null;
+        $this->brokenRecordType = '';
         $this->loadProducts();
     }
 
     public function closeModal(): void{
         $this->score = 0;
         $this->showGameOver = false;
+        $this->brokenRecordType = '';
     }
 
     private function wrongAnswer(): void{
@@ -105,6 +109,28 @@ class Game extends Component{
             if($player){
                 $this->bestScore = $player->gameLogs()->max('score') ?? 0;
             }
+        }
+
+        $this->checkWorldRecord();
+    }
+
+    private function checkWorldRecord(): void{
+        if($this->score === 0) return;
+
+        $allTimeBest = GameLog::max('score') ?? 0;
+        $yearBest = GameLog::whereYear('created_at', now()->year)->max('score') ?? 0;
+        $monthBest = GameLog::whereYear('created_at', now()->year)->whereMonth('created_at', now()->month)->max('score') ?? 0;  
+    
+        if ($this->score > $allTimeBest) {
+            $this->brokenRecordType = 'all_time';
+        } elseif ($this->score > $yearBest) {
+            $this->brokenRecordType = 'year';
+        } elseif ($this->score > $monthBest) {
+            $this->brokenRecordType = 'month';
+        }
+
+        if($this->brokenRecordType !== ''){
+            $this->dispatch('trigger-confetti');
         }
     }
 
