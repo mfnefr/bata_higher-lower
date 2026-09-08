@@ -119,8 +119,8 @@ class Game extends Component{
 
         $allTimeBest = GameLog::max('score') ?? 0;
         $yearBest = GameLog::whereYear('created_at', now()->year)->max('score') ?? 0;
-        $monthBest = GameLog::whereYear('created_at', now()->year)->whereMonth('created_at', now()->month)->max('score') ?? 0;  
-    
+        $monthBest = GameLog::whereYear('created_at', now()->year)->whereMonth('created_at', now()->month)->max('score') ?? 0;
+
         if ($this->score > $allTimeBest) {
             $this->brokenRecordType = 'all_time';
         } elseif ($this->score > $yearBest) {
@@ -150,6 +150,17 @@ class Game extends Component{
         $this->score = 0;
         $this->name = '';
         $this->showGameOver = false;
+    }
+
+    public function goToLeaderboard(){
+        $this->validate(['name' => 'required|min:2|max:30']);
+        
+        $player = Player::firstOrCreate(['name' => $this->name]);
+        $player->gameLogs()->create(['score' => $this->score]);
+
+        session(['name' => $this->name]);
+
+        return redirect()->to('/leaderboard');
     }
 
     public function logOut(){

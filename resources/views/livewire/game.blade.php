@@ -206,10 +206,13 @@
                             class="flex-1 px-6 py-3 text-lg font-semibold text-white transition-colors bg-red-600 rounded-lg shadow hover:bg-red-700">
                             <i class="mr-2 fas fa-redo"></i> {{ __("Play Again") }}
                         </button>
-                        <a href="/leaderboard"
-                            class="px-6 py-3 text-lg font-semibold text-gray-700 transition-colors bg-gray-200 rounded-lg shadow hover:bg-gray-300">
-                            {{ __("Leaderboard") }}
-                        </a>
+                        <button 
+                            type="button" 
+                            wire:click="goToLeaderboard" 
+                            class="px-6 py-3 text-lg font-semibold text-gray-700 transition-colors bg-gray-200 rounded-lg shadow hover:bg-gray-300"
+                        >
+                            {{ __('Leaderboard') }}
+                        </button>
                     </div>
 
                     @else
@@ -242,7 +245,7 @@
             
             let duration = 3 * 1000;
             let animationEnd = Date.now() + duration;
-            let defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99999 }; // Z-index ještě vyšší
+            let defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99999 }; 
 
             function randomInRange(min, max) {
                 return Math.random() * (max - min) + min;
@@ -267,7 +270,7 @@
                         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
                     }));
                 } else {
-                    console.error("Knihovna canvas-confetti nebyla načtena!");
+                    console.error("Confetti library can't be found.");
                 }
             }, 250);
             
