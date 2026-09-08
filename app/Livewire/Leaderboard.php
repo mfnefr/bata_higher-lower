@@ -44,8 +44,14 @@ class Leaderboard extends Component{
 
         if (!empty($this->search)) {
             $searchedIndex = $allPlayers->search(function ($player) {
-                return stripos($player->name, $this->search) !== false;
+                return $player->name === $this->search;
             });
+
+            if($searchedIndex === false){
+                $searchedIndex = $allPlayers->search(function ($player) {
+                    return mb_stripos($player->name, $this->search) !== false;
+                });
+            }
 
             if ($searchedIndex !== false) {
                 $searchedPlayerId = $allPlayers[$searchedIndex]->id;

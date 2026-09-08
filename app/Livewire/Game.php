@@ -136,7 +136,7 @@ class Game extends Component{
 
     public function saveScore(): void{
         $this->validate(['name' => 'required|min:2|max:30']);
-        $player = Player::where('name', $this->name)->first();
+        $player = Player::whereRaw('BINARY name = ?', [$this->name])->first();
 
         if(!$player){
             $player = Player::create(['name' => $this->name]);
@@ -155,7 +155,7 @@ class Game extends Component{
     public function goToLeaderboard(){
         $this->validate(['name' => 'required|min:2|max:30']);
         
-        $player = Player::firstOrCreate(['name' => $this->name]);
+        $player = Player::whereRaw('BINARY name = ?', [$this->name])->first();
         $player->gameLogs()->create(['score' => $this->score]);
 
         session(['name' => $this->name]);
