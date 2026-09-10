@@ -152,8 +152,8 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
 
-                <div class="flex items-center mb-6">
-                    <div class="w-full text-center mb-6">
+                <div class="flex items-center mb-5">
+                    <div class="w-full text-center mb-5">
                         <h3 class="block text-3xl font-bold text-gray-900 mx-auto" id="modal-title">
                             {{ __("Game Over!") }}
                         </h3>
@@ -162,10 +162,10 @@
 
                 <div class="space-y-4">
 
-                    @if($brokenRecordType !== '')                           
+                    @if($brokenRecordType !== '')
                             @if($brokenRecordType === 'all_time')
                                 <div class="text-red-600 font-extrabold text-2xl flex justify-center items-center gap-2">
-                                    {{ __('New All-Time World Record!') }} 
+                                    {{ __('New All-Time World Record!') }}
                                 </div>
                             @elseif($brokenRecordType === 'year')
                                 <div class="text-red-600 font-bold text-xl flex justify-center items-center gap-2">
@@ -206,9 +206,9 @@
                             class="flex-1 px-6 py-3 text-lg font-semibold text-white transition-colors bg-red-600 rounded-lg shadow hover:bg-red-700">
                             <i class="mr-2 fas fa-redo"></i> {{ __("Play Again") }}
                         </button>
-                        <button 
-                            type="button" 
-                            wire:click="goToLeaderboard" 
+                        <button
+                            type="button"
+                            wire:click="goToLeaderboard"
                             class="px-6 py-3 text-lg font-semibold text-gray-700 transition-colors bg-gray-200 rounded-lg shadow hover:bg-gray-300"
                         >
                             {{ __('Leaderboard') }}
@@ -242,10 +242,10 @@
 
 <script>
         window.addEventListener('trigger-confetti', (event) => {
-            
+
             let duration = 3 * 1000;
             let animationEnd = Date.now() + duration;
-            let defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99999 }; 
+            let defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99999 };
 
             function randomInRange(min, max) {
                 return Math.random() * (max - min) + min;
@@ -259,13 +259,13 @@
                 }
 
                 let particleCount = 50 * (timeLeft / duration);
-                
+
                 if (typeof confetti === 'function') {
-                    confetti(Object.assign({}, defaults, { 
+                    confetti(Object.assign({}, defaults, {
                         particleCount,
                         origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
                     }));
-                    confetti(Object.assign({}, defaults, { 
+                    confetti(Object.assign({}, defaults, {
                         particleCount,
                         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
                     }));
@@ -273,6 +273,6 @@
                     console.error("Confetti library can't be found.");
                 }
             }, 250);
-            
+
         });
 </script>
